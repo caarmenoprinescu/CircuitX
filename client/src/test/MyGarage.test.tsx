@@ -51,9 +51,12 @@ describe('MyGarage page', () => {
   it('deletes a car when confirmed', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     renderGarage();
-    const deleteButtons = screen.getAllByTitle('delete car');
+    const deleteButtons = screen.getAllByTitle
+      ? screen.getAllByRole('button').filter(b => b.querySelector('svg'))
+      : [];
     // Find the delete button (Trash2 icon) for the primary car actions
-    const deleteBtn = deleteButtons.find(b => b.className.includes('E8003D'));
+    const allButtons = screen.getAllByRole('button');
+    const deleteBtn = allButtons.find(b => b.className.includes('E8003D') && b.querySelector('svg'));
     if (deleteBtn) {
       fireEvent.click(deleteBtn);
       expect(screen.queryByText('Porsche 911 GT3')).not.toBeInTheDocument();
